@@ -27,10 +27,7 @@ func (errs *slice_err) add_err(text string) {
 }
 
 func (errors slice_err) has_errors() bool {
-	if len(errors) != 0 {
-		return true
-	}
-	return false
+	if len(errors) != 0 { return true }; return false
 }
 
 func MyCheck(input string) error {
