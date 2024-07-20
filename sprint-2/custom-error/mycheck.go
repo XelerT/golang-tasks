@@ -12,7 +12,7 @@ type slice_err []error
 
 func (errs slice_err) Error() string {
 	var buf bytes.Buffer
-	for i, _ := range errs {
+	for i := range errs {
 		buf.WriteString(errs[i].Error())
 	}
 	return buf.String()
