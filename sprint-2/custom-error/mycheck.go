@@ -20,14 +20,14 @@ func (errs slice_err) Error() string {
 
 func (errs *slice_err) add_err(text string) {
 	if len(*errs) != 0 {
-		*errs = append(*errs, errors.New(";" + text))
+		*errs = append(*errs, errors.New(";"+text))
 	} else {
 		*errs = append(*errs, errors.New(text))
 	}
 }
 
-func (errors slice_err) has_errors() bool {
-	if len(errors) != 0 { return true }; return false
+func (errs slice_err) has_errors() bool {
+	return len(errs) != 0
 }
 
 func MyCheck(input string) error {
