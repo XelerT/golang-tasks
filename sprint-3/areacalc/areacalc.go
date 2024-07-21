@@ -1,5 +1,7 @@
 package areacalc
 
+import "bytes"
+
 const pi = 3.14159
 
 type Shape interface {
@@ -8,26 +10,51 @@ type Shape interface {
 }
 
 type Rectangle struct {
-	// TODO: implement me
+	a    float64
+	b    float64
+	name string
 }
 
-func NewRectangle(float64, float64, string) *Rectangle {
-	// TODO: implement me
-	return &Rectangle{}
+func NewRectangle(a_ float64, b_ float64, name_ string) *Rectangle {
+	return &Rectangle{a: a_, b: b_, name: name_}
 }
 
-// TODO: implement me
+func (rec Rectangle) Area() float64 {
+	return rec.a * rec.b
+}
+
+func (rec Rectangle) Type() string {
+	return rec.name
+}
 
 type Circle struct {
-	// TODO: implement me
+	radius float64
+	name   string
 }
 
-func NewCircle(float64, string) *Circle {
-	// TODO: implement me
-	return &Circle{}
+func (cir Circle) Area() float64 {
+	return pi * cir.radius * cir.radius
+}
+
+func (cir Circle) Type() string {
+	return cir.name
+}
+
+func NewCircle(radius_ float64, name_ string) *Circle {
+	return &Circle{radius: radius_, name: name_}
 }
 
 func AreaCalculator(figures []Shape) (string, float64) {
-	// TODO: implement me
-	return "", 0.0
+	var area float64
+	var buf bytes.Buffer
+
+	for i := range figures {
+		if i != 0 {
+			buf.WriteString("-")
+		}
+		buf.WriteString(figures[i].Type())
+		area += figures[i].Area()
+	}
+
+	return buf.String(), area
 }
