@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"errors"
 	"strings"
+	"unicode"
 )
 
 type slice_err []error
@@ -26,16 +27,10 @@ func (errs *slice_err) add_err(text string) {
 	}
 }
 
-func (errs slice_err) has_errors() bool {
-	return len(errs) != 0
-}
-
 func MyCheck(input string) error {
 	var errs slice_err
-	is_number := func(r rune) bool {
-		return '0' <= r && r <= '9'
-	}
-	if strings.ContainsFunc(input, is_number) {
+
+	if strings.ContainsFunc(input, unicode.IsDigit) {
 		errs.add_err("found numbers")
 	}
 	if len(input) >= 20 {
@@ -45,7 +40,7 @@ func MyCheck(input string) error {
 		errs.add_err("no two spaces")
 	}
 
-	if errs.has_errors() {
+	if len(errs) != 0 {
 		return errs
 	}
 

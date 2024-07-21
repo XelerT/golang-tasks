@@ -1,6 +1,8 @@
 package reflect_spell
 
-import "reflect"
+import (
+	"reflect"
+)
 
 type Spell interface {
 	// название заклинания
@@ -32,6 +34,9 @@ func CastTo(spell Spell, object interface{}) {
 	}
 
 	field := obj_val.FieldByName(spell.Char())
+	if field.Kind() != reflect.Int {
+		return
+	}
 	if field.IsValid() {
 		if field.CanSet() {
 			field.SetInt(int64(int(field.Int()) + spell.Value()))
