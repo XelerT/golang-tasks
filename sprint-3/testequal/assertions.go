@@ -10,17 +10,18 @@ import (
 )
 
 func maps_str_equal(lhs, rhs map[string]string) bool {
+	if lhs == nil || rhs == nil {
+		return false
+	}
 	if len(lhs) != len(rhs) {
 		return false
 	}
 
 	for key := range lhs {
 		if val, ok := rhs[key]; ok {
-			if val != rhs[key] {
-				fmt.Printf("%s != %s", val, rhs[key])
+			if val != lhs[key] {
 				return false
 			}
-			fmt.Println("asdasd")
 		} else {
 			return false
 		}
@@ -33,13 +34,10 @@ func slices_equal(lhs, rhs interface{}) bool {
 	if reflect.TypeOf(lhs).Kind() != reflect.Slice {
 		return false
 	}
-	rhs_vals := reflect.Indirect(reflect.ValueOf(rhs))
-	lhs_vals := reflect.Indirect(reflect.ValueOf(lhs))
+	rhs_vals := reflect.ValueOf(rhs)
+	lhs_vals := reflect.ValueOf(lhs)
 
 	if lhs_vals.Len() != rhs_vals.Len() {
-		return false
-	}
-	if lhs_vals.Cap() != rhs_vals.Cap() {
 		return false
 	}
 	if lhs_vals.Len() == 0 {
@@ -49,14 +47,25 @@ func slices_equal(lhs, rhs interface{}) bool {
 		return false
 	}
 
-	val := reflect.ValueOf(lhs_vals.Index(0))
+	val := lhs_vals.Index(0)
 	if !val.Comparable() {
 		return false
 	}
 
+	eq_f := func(a, b interface{}) bool { return false }
+	switch val.Kind() {
+	case reflect.Int:
+		eq_f = func(a, b interface{}) bool {
+			return a.(int) == b.(int)
+		}
+	case reflect.Uint8:
+		eq_f = func(a, b interface{}) bool {
+			return a.(byte) == b.(byte)
+		}
+	}
+
 	for i := 0; i < rhs_vals.Len(); i++ {
-		if lhs_vals.Index(i) != rhs_vals.Index(i) {
-			fmt.Printf("%v != %v", lhs_vals.Index(i), rhs_vals.Index(i))
+		if !eq_f(lhs_vals.Index(i).Interface(), rhs_vals.Index(i).Interface()) {
 			return false
 		}
 	}
